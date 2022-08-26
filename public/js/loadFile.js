@@ -1,11 +1,9 @@
 function loadFile(input) {
     var file = input.files[0];	//선택된 파일 가져오기
 
-    /*
     //미리 만들어 놓은 div에 text(파일 이름) 추가
     var name = document.getElementById('fileName');
     name.textContent = file.name;
-    */
    
   	//새로운 이미지 div 추가
     var newImage = document.createElement("img");
@@ -24,9 +22,6 @@ function loadFile(input) {
     container.appendChild(newImage);
 };
 
-var submit = document.getElementById('submitButton');
-submit.onclick = showImage;     //Submit 버튼 클릭시 이미지 보여주기
-
 function showImage() {
     var newImage = document.getElementById('image-show').lastElementChild;
   
@@ -38,3 +33,7 @@ function showImage() {
 
     document.getElementById('fileName').textContent = null;     //기존 파일 이름 지우기
 }
+$(document).ready(() => {
+  let submit = document.getElementById('submitButton');
+  submit.addEventListener('click', showImage);
+});

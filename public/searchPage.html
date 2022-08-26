@@ -10,7 +10,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://use.fontawesome.com/releases/v6.1.2/js/all.js"></script>
         <script src="js/bootstrap.min.js"></script>
-        <script src="js/login_register.js"></script>
+        <script src="js/image_upload.js"></script>
         <script src="js/header.js"></script>
         <title>HELLO</title>
     </head>
@@ -23,11 +23,28 @@
         <section>
 
           <div style="margin-left: 5%; margin-right: 5%">
+            <p class="h3">사진 올리기</p>
+            <hr>
+            <div class="input-group">
+              <input type="file" name="uploadfile" id="uploadImgInput" multiple style="display:none;" accept=".gif, .jpg, .png" onchange="uploadFileAdded()"/>
+              <label class="btn btn-primary" for="uploadImgInput">이미지 선택</label>
+            </div>
+            <br>
+            <p class="h3">업로드 대상 사진</p>
+            <hr>
+
+            <div id="div-upload-image"></div>
+            <button id="btn-img-upload" type="button" class="btn btn-primary" onclick="startUpload();">업로드</button>
+            <br>
+            <br>
             <p class="h3">요약</p>
+            <hr>
             <div class="mb-3">
               <!-- <label for="exampleFormControlTextarea1" class="form-label"></label> -->
               <textarea class="form-control" id="exampleFormControlTextarea1" rows="8" style="resize: none;" readonly>dlglgl</textarea>
             </div>
+
+
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
               수정하기
@@ -62,12 +79,10 @@
                     <hr>
                     <div class="mb-3">
                       <!-- <label for="exampleFormControlTextarea1" class="form-label"></label> -->
-                      <textarea class="form-control" id="exampleFormControlTextarea1" rows="8" style="resize: none;">aldldl</textarea>
+                      <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" style="resize: none;">aldldl</textarea>
                     </div>
                   </div>
-                  
-                    
-                  
+
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
                     <button type="button" class="btn btn-primary">수정</button>
@@ -75,6 +90,28 @@
                 </div>
               </div>
             </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteImageDialog" tabindex="-1" aria-labelledby="deleteImageDialogLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="deleteImageDialogLabel">이미지 삭제</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  
+                  <div class="modal-body">
+                    <p id="p-delete-dialog">이미지를 삭제하시겠습니까?</p>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteImage();">삭제</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
           
         </section>

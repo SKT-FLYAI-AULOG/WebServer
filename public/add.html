@@ -1,0 +1,102 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/styleForAdd.css" rel="stylesheet">
+        <link href="css/custom.css" rel="stylesheet">
+        <style type="text/css">
+          @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script src="https://use.fontawesome.com/releases/v6.1.2/js/all.js"></script>
+        <script src="js/header.js"> </script>
+        <script src="js/loadFile.js"> </script>
+        <title>HELLO</title>
+    </head>
+    <body>
+        <header>
+
+        </header>
+
+
+        <section>
+          <div class="container">
+            <div class="image-upload" id="image-upload">
+    
+                <form method="post" enctype="multipart/form-data">
+                    <div class="button">
+                        <label for="chooseFile">
+                            👉 CLICK HERE! 👈
+                        </label>
+                    </div>
+                    <input type="file" id="chooseFile" name="chooseFile" accept="image/*" onchange="loadFile(this)">
+                </form>
+    
+                <div class="fileContainer">
+                    <div class="fileInput">
+                        <p>FILE NAME: </p>
+                        <p id="fileName"></p>
+                    </div>
+                    <div class="buttonContainer">
+                        <div class="submitButton" id="submitButton">SUBMIT</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="image-show" id="image-show"></div>
+        </div>
+          <!-- <p class="h2" style="margin-top: 20px;">일상 기록하기</p>
+          <div class="container">
+            <div class="image-upload" id="image-upload">
+          
+
+          <div class="fileUploader">
+              <form method="post" enctype="multipart/form-data">
+                  <div class="button">
+                      <label for="chooseFile">
+                          <img src="assets/images/add.png" width="400" height="400">
+                      </label>
+                  </div>
+                  <input type="file" id="chooseFile" name="chooseFile" accept="image/*" onchange="loadFile(this)">
+              </form>
+
+              <div class="fileContainer">
+                  <div class="fileInput">
+                      <p>FILE NAME: </p>
+                      <p id="fileName"></p>
+                  </div>
+                  <div style="text-align: center; margin-bottom: 20px;">
+                      <div class="dropdown">
+                          <select class="btn btn-secondary dropdown-toggle" id="asd" aria-label="">
+                            <option value="1" selected>카테고리</option>
+                            <option value="2">일상</option>
+                            <option value="3">여가</option>
+                            <option value="4">액티비티</option>
+                          </select>
+                        </div>
+                  </div>
+                  
+                  
+                  
+                  
+                  <div class="buttonContainer">
+                      <div class="submitButton" id="submitButton">기록하기</div>
+                  </div>
+
+                  <div class="image-show" id="image-show"></div>
+              </div>
+          </div>
+           -->
+
+        </section>
+
+
+        <footer>
+
+        </footer>
+    </body>
+</html>
+
