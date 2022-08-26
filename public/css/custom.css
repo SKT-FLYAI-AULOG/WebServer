@@ -1,3 +1,7 @@
+* {
+    src: url(//fonts.gstatic.com/ea/nanumgothic/v5/NanumGothic-ExtraBold.eot);
+    font-family: 'NanumGothic';
+}
 @media (max-width: 768px) {
     .navbar-collapse {
         position: fixed;
@@ -24,4 +28,16 @@
     .navbar-toggler.collapsed ~ .navbar-collapse {
         transition: left 400ms ease-in;
     }
+}
+
+#div-content {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 20px;
+}
+
+.card {
+    width: 100% !important;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
 }

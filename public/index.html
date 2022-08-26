@@ -4,6 +4,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/custom.css" rel="stylesheet">
+        <style type="text/css">
+          @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+        </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="https://use.fontawesome.com/releases/v6.1.2/js/all.js"></script>
@@ -11,7 +14,7 @@
     </head>
     <body>
         <header>
-          <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <nav class="navbar navbar-expand-lg navbar-light bg-light" style="z-index: 100;">
             <div class="container-fluid">
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -35,6 +38,8 @@
                     <a class="nav-link active" aria-current="page" href="#">랭킹</a>
                   </li>
                 </ul>
+                <br>
+                <br>
                 <form class="d-flex">
                   <input class="form-control me-2" type="search" placeholder="검색어 입력" aria-label="Search">
                   <button class="btn btn-outline-success" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
@@ -46,8 +51,77 @@
 
 
         <section>
-          <div style="width: 100%; height: 100%; background-color:blue;">
+          <div id="div-content">
+            <p class="h2">인기 일상</p>
+            <hr>
+            
 
+            
+
+            <br>
+            <p class="h2 font-weight-bold">나의 기록</p>
+            <hr>
+            
+
+            <div class="card" aria-hidden="true">
+              <img src="..." class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title placeholder-glow">
+                  <span class="placeholder col-6"></span>
+                </h5>
+                <p class="card-text placeholder-glow">
+                  <span class="placeholder col-7"></span>
+                  <span class="placeholder col-4"></span>
+                  <span class="placeholder col-4"></span>
+                  <span class="placeholder col-6"></span>
+                  <span class="placeholder col-8"></span>
+                </p>
+                <a href="#" tabindex="-1" class="btn btn-primary disabled placeholder col-6"></a>
+              </div>
+            </div>
+
+            <div class="card col-md-3" style="float: none; margin:0 auto; width: 30rem;">
+              <img src="assets/images/1234.jpg" class="card-img-top" style="position: relative;" alt="#">
+              <div class="btn-group" role="group" aria-label="Basic outlined example">
+                <button type="button" class="btn btn-outline-primary">#풍경</button>
+                <button type="button" class="btn btn-outline-primary">#미술</button>
+                <button type="button" class="btn btn-outline-primary">#취미</button>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">8월 26일 이야기</h5>
+                <p class="card-text">나는 오늘도 눈물을 흘린ㄷr 이것저것 문제가 많다 흑흑 ㅋㅋㅋㅋ재밌는 하루였다. 그래서 나는 오늘 면접을 봤고 이것은 세상을 살아가는 것에 대해 많은 도움을 주고 또한 오늘의 증시는...</p>
+                <a href="#" class="btn btn-primary">자세히 보기</a>
+              </div>
+            </div>
+
+            <div class="card col-md-3" style="float: none; margin:0 auto; width: 30rem;">
+              <img src="assets/images/1234.jpg" class="card-img-top" style="position: relative;" alt="#">
+              <div class="btn-group" role="group" aria-label="Basic outlined example">
+                <button type="button" class="btn btn-outline-primary">#풍경</button>
+                <button type="button" class="btn btn-outline-primary">#미술</button>
+                <button type="button" class="btn btn-outline-primary">#취미</button>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">8월 26일 이야기</h5>
+                <p class="card-text">나는 오늘도 눈물을 흘린ㄷr 이것저것 문제가 많다 흑흑 ㅋㅋㅋㅋ재밌는 하루였다. 그래서 나는 오늘 면접을 봤고 이것은 세상을 살아가는 것에 대해 많은 도움을 주고 또한 오늘의 증시는...</p>
+                <a href="#" class="btn btn-primary">자세히 보기</a>
+              </div>
+            </div>
+
+            <div class="card col-md-3" style="float: none; margin:0 auto; width: 30rem;">
+              <img src="assets/images/1234.jpg" class="card-img-top" style="position: relative;" alt="#">
+              <div class="btn-group" role="group" aria-label="Basic outlined example">
+                <button type="button" class="btn btn-outline-primary">#풍경</button>
+                <button type="button" class="btn btn-outline-primary">#미술</button>
+                <button type="button" class="btn btn-outline-primary">#취미</button>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">8월 26일 이야기</h5>
+                <p class="card-text">나는 오늘도 눈물을 흘린ㄷr 이것저것 문제가 많다 흑흑 ㅋㅋㅋㅋ재밌는 하루였다. 그래서 나는 오늘 면접을 봤고 이것은 세상을 살아가는 것에 대해 많은 도움을 주고 또한 오늘의 증시는...</p>
+                <a href="#" class="btn btn-primary">자세히 보기</a>
+              </div>
+            </div>
+            
           </div>
         </section>
 
