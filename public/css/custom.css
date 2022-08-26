@@ -38,6 +38,19 @@
 
 .card {
     width: 100% !important;
-    margin-top: 10px !important;
-    margin-bottom: 10px !important;
+    margin-top: 20px !important;
+    margin-bottom: 50px !important;
+}
+
+.div-loginForm {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.div-loginFormInner {
+    margin-bottom: 20px;
+}
+
+.div-loginFormBottom {
+    margin-top: 10px;
 }
