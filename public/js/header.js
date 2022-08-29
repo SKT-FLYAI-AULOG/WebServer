@@ -4,7 +4,7 @@ $(document).ready(() => {
       <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a class="navbar-brand col-md-3" style="float: none; margin:0 auto;" href="index.html">AULOG</a>
+      <a class="navbar-brand col-md-3" style="float: none; margin:0 auto;" href="/">AULOG</a>
       <div class="collapse navbar-collapse bg-light bg-gradent" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">

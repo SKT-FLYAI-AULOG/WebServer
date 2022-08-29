@@ -3,26 +3,79 @@ $(document).ready(() => {
 });
 
 function setEvent() {
-    let loginInput = document.querySelector("#registerId");
-    let pwInput = document.querySelector("#registerPw");
-    let pwCheckInput = document.querySelector("#registerPw2");
-    let requestBtn = document.querySelector("#requestRegister");
+    try {
+        let idInput = document.querySelector("#registerId");
+        let pwInput = document.querySelector("#registerPw");
+        let pwCheckInput = document.querySelector("#registerPw2");
+        let nickInput = document.querySelector("#registerNick");
+        let requestBtn = document.querySelector("#requestRegister");
 
-    loginInput.addEventListener("change", idCheck);
-    pwCheckInput.addEventListener("change", pwCheck);
-    requestBtn.addEventListener("click", requestRegister);
+        idInput.addEventListener("change", idCheck);
+        pwCheckInput.addEventListener("change", pwCheck);
+        requestBtn.addEventListener("click", requestRegister);
+        nickInput.addEventListener("change", nickCheck);
+    }
+    catch {
+
+    }
 }
 
 function requestRegister() {
-    printAlert("가입에 실패했습니다.");
+    let idInput = document.querySelector("#registerId");
+    let pwInput = document.querySelector("#registerPw");
+    let pwCheckInput = document.querySelector("#registerPw2");
+    let nickInput = document.querySelector("#registerNick");
+    let emailInput = document.querySelector("#registerEmail");
+    let emailInputDomain = document.querySelector("#registerEmailDomain");
+
+    if (idInput.classList.contains("is-invalid") || idInput.value === "") {
+        printAlert("아이디를 확인해주세요.");
+    }
+    else if (pwCheckInput.classList.contains("is-invalid") || pwCheckInput.value === "") {
+        printAlert("비밀번호를 확인해주세요.");
+    }
+    else if (nickInput.classList.contains("is-invalid") || nickInput.value === "") {
+        printAlert("닉네임을 확인해주세요.");
+    }
+    else if (emailInput.value === "") {
+        printAlert("이메일을 확인해주세요.");
+    }
+    else {
+        data = {
+            id: idInput.value,
+            pw: pwInput.value,
+            email: emailInputDomain.selectedIndex === 0 ? emailInput.value : emailInput.value + emailInputDomain.options[emailInputDomain.selectedIndex].innerHTML,
+            nick: nickInput.value
+        }
+        $.ajax({
+            type: "POST",
+            url: "/register",
+            data: data,
+            success: (res) => {
+                if (res.ok) {
+                    $('#dialog').modal('show');
+                }
+                else {
+                    printAlert(res.msg);
+                }
+            },
+            error: (err) => {
+                printAlert(err.msg);
+            }
+        });
+    }
 }
 
-function printAlert(text) {
+function dialogOk() {
+    window.location.href = '/login';
+}
+
+function printAlert(text, warn=true) {
     let divAlert = document.querySelector('#div-alert');
     let alertElement = document.createElement('div');
     let textDiv = document.createElement('div');
     alertElement.classList.add('alert');
-    alertElement.classList.add('alert-danger');
+    alertElement.classList.add(warn ? 'alert-danger' : 'alert-success');
     alertElement.classList.add('d-flex');
     alertElement.classList.add('align-items-center');
     alertElement.setAttribute('role', 'alert');
@@ -38,7 +91,48 @@ function printAlert(text) {
 }
 
 function idCheck() {
+    let idInput = document.querySelector("#registerId");
+    let idLabel = document.querySelector("#registerIdLabel");
+    $.ajax({
+        type: "POST",
+        url: "/idcheck",
+        data: {id: idInput.value},
+        success: (res) => {
+            if (res.ok) {
+                idLabel.innerHTML = "아이디";
+                idInput.classList.remove("is-invalid");
+            }
+            else {
+                idLabel.innerHTML = "이미 존재하는 아이디입니다.";
+                idInput.classList.add("is-invalid");
+            }
+        },
+        error: (err) => {
 
+        }
+    });
+}
+function nickCheck() {
+    let nickInput = document.querySelector("#registerNick");
+    let nickLabel = document.querySelector("#registerNickLabel");
+    $.ajax({
+        type: "POST",
+        url: "/nickcheck",
+        data: {nick: nickInput.value},
+        success: (res) => {
+            if (res.ok) {
+                nickLabel.innerHTML = "닉네임";
+                nickInput.classList.remove("is-invalid");
+            }
+            else {
+                nickLabel.innerHTML = "이미 존재하는 닉네임입니다.";
+                nickInput.classList.add("is-invalid");
+            }
+        },
+        error: (err) => {
+
+        }
+    });
 }
 
 function pwCheck() {
@@ -46,7 +140,6 @@ function pwCheck() {
     let pwCheckInput = document.querySelector("#registerPw2");
     let pwCheckLabel = document.querySelector("#registerPw2Label");
 
-    console.log(pwInput.value, pwCheckInput.value)
     if (pwInput.value !== pwCheckInput.value) {
         pwCheckLabel.innerHTML = "비밀번호를 확인해주세요.";
         pwCheckInput.classList.add("is-invalid");

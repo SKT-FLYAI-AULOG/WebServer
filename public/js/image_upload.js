@@ -7,9 +7,6 @@ function uploadFileAdded() {
     for (let i = 0; i < fileLists.length; i++) {
         let file = fileLists[i];
         createImageDiv(file, i);
-        // 비동기 파일 업로드를 시작한다.
-        //var uploader = new Uploader(file);
-        //uploader.startUpload();
     }
     // 폼을 리셋해서 uploadFiles에 출력된 선택 파일을 초기화시킨다.
     document.getElementById("uploadImgInput").value = "";
@@ -44,6 +41,7 @@ function createImageDiv(file, i) {
     let imgDiv = document.createElement('div');
     imgDiv.style.border = '1px solid'
     imgDiv.style.margin = '5px';
+    imgDiv.style.marginBottom = '30px';
     let imgList = document.querySelector("#div-upload-image");
     imgDiv.style.width = "100px";
     imgDiv.style.height = "100px";
@@ -62,11 +60,54 @@ function showDeleteImageDialog(i) {
 }
 
 function startUpload() {
+    if (fileLists.length === 0)
+        return;
     let btn = document.querySelector('#btn-img-upload');
     btn.disabled = true;
     btn.innerHTML = '';
     btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
     업로드 진행중...`;
+    // 비동기 파일 업로드를 시작한다.
+    let formData = new FormData();
+    for (let i = 0; i < fileLists.length; i++) {
+        formData.append('files', fileLists[i]);
+        //var uploader = new Uploader(fileLists[i]);
+        //uploader.startUpload();
+    }
+    $.ajax({
+        url: "/upload",
+        type: "post",
+        data: formData,
+        cache: false,
+        processData: false,
+        contentType: false,
+        success: (data) => {
+            if (data.ok) {
+                let imgList = document.querySelector("#div-upload-image").children;
+                for(let i = 0; i < data.data.length; i++) {
+                    imgList[i].innerHTML += `<p style="position: absolute; margin-top: 5px;">#${data.data[i].tag}</p>`;
+                };
+                document.querySelector('#p-upload-dialog').innerHTML = '업로드에 성공했습니다.';
+                $('#successUploadDialog').modal('show');
+                //fileLists = [];
+                //refreshUploadFiles();
+                btn.disabled = false;
+                btn.innerHTML = '업로드';
+            }
+            else {
+                document.querySelector('#p-upload-dialog').innerHTML = '업로드에 실패했습니다. 다시 시도해주세요.';
+                $('#successUploadDialog').modal('show');
+                btn.disabled = false;
+                btn.innerHTML = '업로드';
+            }
+        },
+        error: (e) => {
+            document.querySelector('#p-upload-dialog').innerHTML = '업로드에 실패했습니다. 다시 시도해주세요.';
+            $('#successUploadDialog').modal('show');
+            btn.disabled = false;
+            btn.innerHTML = '업로드';
+        }
+    });
 }
 
 function Uploader(file) {
@@ -112,7 +153,7 @@ function Uploader(file) {
         // FileReader에서 파일 데이터를 읽은 경우 발생하는 이벤트
         reader.onload = function(evt) {
             // AJAX 요청을 생성해 전송한다.
-            xhr.open("POST", "upload.asp", true);
+            xhr.open("POST", "upload", true);
             // 파일 이름은 file-name에 명시한다.
             xhr.setRequestHeader("file-name", encodeURIComponent(fileName));
             xhr.send(evt.target.result);
@@ -151,4 +192,16 @@ function Uploader(file) {
         self._removeUploadItem();
         console.log("An error occurred while transferring the file.");
     }
+}
+
+
+function writePost() {
+    let postTextArea = document.querySelector("#postTextArea");
+    let postTextAreaReadOnly = document.querySelector("#postTextAreaReadOnly");
+
+    postTextAreaReadOnly.value = postTextArea.value;
+}
+
+function addPost(element) {
+
 }

@@ -1,0 +1,198 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/custom.css" rel="stylesheet">
+        <style type="text/css">
+          @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://use.fontawesome.com/releases/v6.1.2/js/all.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/image_upload.js"></script>
+        <script src="js/header.js"></script>
+        <title>HELLO</title>
+    </head>
+    <body>
+        <header>
+          
+        </header>
+
+
+        <section>
+
+          <div style="margin-top: 20px; margin-left: 5%; margin-right: 5%">
+            <p class="h1">글 작성하기</p>
+            <br>
+
+            <p class="h3">분류 설정</p>
+            <hr>
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingOne">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    취미/풍경이란?
+                  </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                  <div class="accordion-body"><code>풍경사진</code>이나, <code>하나를 대상으로 하는</code> 사진에 대한 분석을 더 잘 할 수 있어요.</div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingTwo">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                    일상이란?
+                  </button>
+                </h2>
+                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                  <div class="accordion-body"><code>음료가 있는 카페 사진</code>같은 <code>다양한 대상이 있는</code> 사진에 대한 분석을 더 잘 할 수 있어요.</div>
+                </div>
+              </div>
+            </div>
+            <br>
+
+            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+              <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+              <label class="btn btn-outline-primary" for="btnradio1">취미/풍경</label>
+
+              <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+              <label class="btn btn-outline-primary" for="btnradio2">일상</label>
+            </div>
+
+            <br>
+            <br>
+
+            <p class="h3">사진 올리기</p>
+            <hr>
+            <div class="input-group">
+              <input type="file" name="uploadfile" id="uploadImgInput" multiple style="display:none;" accept=".gif, .jpg" onchange="uploadFileAdded()"/>
+              <label class="btn btn-primary" for="uploadImgInput">이미지 선택</label>
+            </div>
+            <br>
+            <p class="h3">업로드 대상 사진</p>
+            <hr>
+
+            <div id="div-upload-image"></div>
+            <button id="btn-img-upload" type="button" class="btn btn-primary" onclick="startUpload();">업로드</button>
+            <br>
+            <br>
+            <p class="h3">본문 작성</p>
+            <hr>
+            <div class="mb-3">
+              <!-- <label for="exampleFormControlTextarea1" class="form-label"></label> -->
+              <textarea class="form-control" id="postTextAreaReadOnly" rows="8" style="resize: none;" readonly></textarea>
+            </div>
+
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              수정하기
+            </button>
+
+            <br>
+            <br>
+            <p class="h3">부가 설정</p>
+            <hr>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="openPostSwitch">
+              <label class="form-check-label" for="openPostSwitch">전체공개</label>
+            </div>
+            <br>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" style="width:100%; height: 50px; margin-bottom: 10px;">
+              글 등록하기
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">문장 수정하기</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  
+                  <div class="modal-body">
+                    <div style="margin-bottom: 10px;">
+                      <h5>문장 추천</h5>
+                      <hr>
+                      <div class="list-group">
+                        <button type="button" class="list-group-item list-group-item-action active">짱짱 여기 개 맛집이예요 ^^</button>
+                        <button type="button" class="list-group-item list-group-item-action">개맛없음</button>
+                        <button type="button" class="list-group-item list-group-item-action">그냥 집앞이 더 좋은듯</button>
+                        <button type="button" class="list-group-item list-group-item-action">다음에 또 올게요 ^~^</button>
+                        <button type="button" class="list-group-item list-group-item-action">존맛</button>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary">다시생성</button>
+                      <button type="button" class="btn btn-primary">추가</button>
+                    </div>
+                    <h5>내용 편집</h5>
+                    <hr>
+                    <div class="mb-3">
+                      <!-- <label for="exampleFormControlTextarea1" class="form-label"></label> -->
+                      <textarea class="form-control" id="postTextArea" rows="6" style="resize: none;"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="writePost();">수정</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteImageDialog" tabindex="-1" aria-labelledby="deleteImageDialogLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="deleteImageDialogLabel">이미지 삭제</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  
+                  <div class="modal-body">
+                    <p id="p-delete-dialog">이미지를 삭제하시겠습니까?</p>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteImage();">삭제</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="successUploadDialog" tabindex="-1" aria-labelledby="successUploadDialogLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="successUploadDialogLabel">이미지 업로드</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  
+                  <div class="modal-body">
+                    <p id="p-upload-dialog">업로드에 성공했습니다!</p>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          
+        </section>
+
+
+        <footer>
+          
+        </footer>
+    </body>
+</html>
