@@ -6,6 +6,9 @@ $(document).ready(() => {
       </button>
       <a class="navbar-brand col-md-3" style="float: none; margin:0 auto;" href="/">AULOG</a>
       <div class="collapse navbar-collapse bg-light bg-gradent" id="navbarSupportedContent">
+        <div id="div-header-nick" style="margin-top: 20px; margin-bottom: 20px;">
+          <h3 style="display: inline;">로그인을 해주세요</h3>
+        </div>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#">마이페이지</a>

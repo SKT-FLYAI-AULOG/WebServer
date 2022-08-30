@@ -8,6 +8,7 @@
           @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
         </style>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
         <script src="https://use.fontawesome.com/releases/v6.1.2/js/all.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="js/image_upload.js"></script>
@@ -79,6 +80,7 @@
             <br>
             <p class="h3">본문 작성</p>
             <hr>
+            <input id="post-title" class="form-control form-control-lg" type="text" placeholder="제목입력" aria-label=".form-control-lg example" style="margin-bottom: 10px;">
             <div class="mb-3">
               <!-- <label for="exampleFormControlTextarea1" class="form-label"></label> -->
               <textarea class="form-control" id="postTextAreaReadOnly" rows="8" style="resize: none;" readonly></textarea>
@@ -100,7 +102,7 @@
             </div>
             <br>
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" style="width:100%; height: 50px; margin-bottom: 10px;">
+            <button id="btn-post-submit" type="button" class="btn btn-primary" style="width:100%; height: 50px; margin-bottom: 10px;" onclick="submitPost();">
               글 등록하기
             </button>
 
@@ -117,12 +119,9 @@
                     <div style="margin-bottom: 10px;">
                       <h5>문장 추천</h5>
                       <hr>
-                      <div class="list-group">
-                        <button type="button" class="list-group-item list-group-item-action active">짱짱 여기 개 맛집이예요 ^^</button>
-                        <button type="button" class="list-group-item list-group-item-action">개맛없음</button>
-                        <button type="button" class="list-group-item list-group-item-action">그냥 집앞이 더 좋은듯</button>
-                        <button type="button" class="list-group-item list-group-item-action">다음에 또 올게요 ^~^</button>
-                        <button type="button" class="list-group-item list-group-item-action">존맛</button>
+                      <input id="inp-recommand-word" class="form-control" type="text" placeholder="추천받을 단어 입력" aria-label="" onchange="loadSentence();">
+                      <br>
+                      <div id="div-recommand-sentences" class="list-group">
                       </div>
                     </div>
                     <div class="modal-footer">
@@ -139,7 +138,7 @@
 
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="writePost();">수정</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="editPost();">수정</button>
                   </div>
                 </div>
               </div>

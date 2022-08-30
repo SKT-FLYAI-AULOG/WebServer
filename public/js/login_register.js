@@ -41,9 +41,9 @@ function requestRegister() {
         printAlert("이메일을 확인해주세요.");
     }
     else {
-        data = {
+        let data = {
             id: idInput.value,
-            pw: pwInput.value,
+            pw: CryptoJS.MD5(pwInput.value).toString(),
             email: emailInputDomain.selectedIndex === 0 ? emailInput.value : emailInput.value + emailInputDomain.options[emailInputDomain.selectedIndex].innerHTML,
             nick: nickInput.value
         }
@@ -148,4 +148,10 @@ function pwCheck() {
         pwCheckLabel.innerHTML = "비밀번호 확인";
         pwCheckInput.classList.remove("is-invalid");
     }
+}
+
+function loginPasswordToMD5() {
+    let pw = document.querySelector("#loginPwInput");
+    pw.value = CryptoJS.MD5(pw.value).toString();
+    return true;
 }

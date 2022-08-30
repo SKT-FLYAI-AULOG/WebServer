@@ -10,6 +10,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <script src="https://use.fontawesome.com/releases/v6.1.2/js/all.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/core.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/md5.js"></script>
         <script src="js/login_register.js"></script>
         <script src="js/header.js"></script>
         <title>HELLO</title>
@@ -29,7 +31,7 @@
             <div class="div-loginForm">
               <fieldset class="form-group border p-3">
                 <legend class="float-none w-auto p-2">로그인</legend>
-                <form action="/login" method="POST">
+                <form action="/login" method="POST" onsubmit="return loginPasswordToMD5();">
                   <div class="div-loginFormInner">
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" id="loginIdInput" name="id" placeholder="">

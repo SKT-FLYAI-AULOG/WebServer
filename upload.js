@@ -30,7 +30,7 @@ const fileFilter = (req, file, cb) => {
       },
     }),
     fileFilter : fileFilter,
-    limits: { fileSize: 30 * 1024 * 1024 },
+    limits: { fileSize: 300 * 1024 * 1024 },
   });
 
   module.exports = { upload };
