@@ -65,18 +65,30 @@ app.get('/register', (req, res) => {
     }
 });
 
-app.get('/post', (req, res) => {
-    res.render('postPage', {});
+app.get('/post*', (req, res) => {
+    if (req.session.login) {
+        let no = req.params[0];
+        if (no) {
+            res.render('readPostPage', {no: no.replace('/', '')});
+        }
+        else {
+            res.render('postPage', {});
+        }
+    }
+    else {
+        res.redirect('/');
+    }
 });
 
 
 // 이미지 업로드
 app.post("/upload/*", upload.array("files"), async (req, res) => {
     console.log("PARAM", req.params);
-    let results = [];
     let formData = FormData();
     let url = req.params[0] == 'class' ? API_URL+`/clf` : API_URL+`/predict`;
-    let type = req.params[0] == 'class' ? "files" : "file"
+    let type = req.params[0] == 'class' ? "files" : "files"
+    let results = {};
+    results.filenames = [];
     try {
         req.files.map(data => {
             // console.log("폼에 정의된 필드명 : ", data.fieldname);
@@ -88,34 +100,29 @@ app.post("/upload/*", upload.array("files"), async (req, res) => {
             // console.log("업로드된 파일의 전체 경로 ", data.path);
             // console.log("파일의 바이트(byte 사이즈)", data.size);
             console.log(data);
-            
-            // 파일
-            results.push({});
-            results[results.length - 1].filename = data.filename;
+            results.filenames.push(data.filename)
             formData.append(type, fs.createReadStream(data.path), { knownLength: fs.statSync(data.path).size });
         })
         axios.post(url, formData, {
             ...formData.getHeaders(),
             "Content-Length": formData.getLengthSync(),
+            "Content-type": `multipart/form-data; boundary=${formData._boundary}`,
             maxContentLength: Infinity,
             maxBodyLength: Infinity
         }).then(data => {
+            
             console.log(data);
             if (req.params[0] == 'class') {
-                let result = data.data.split(";");
-                let split;
-                for(let i = 0; i < result.length - 1; i++) {
-                    split = result[i].split(",");
-                    results[i].tag = split[0];
-                }
+                results.tags = data.data.tags;
+                results.cn = data.data.cn;
+                results.sentences = data.data.sentence;
                 console.log(results);
                 res.json({ok: true, data: results});
             }
             else {
-                for(let i = 0; i < results.length; i++) {
-                    results[i].tag = data.data.mainObj;
-                }
                 results.tags = data.data.allObj;
+                results.cn = data.data.cn;
+                results.sentences = data.data.sentence;
                 console.log(results)
                 res.json({ok: true, data: results});
             }
@@ -138,7 +145,7 @@ app.post("/upload/*", upload.array("files"), async (req, res) => {
 
 app.post('/idcheck', (req, res) => {
     let id = req.body.id;
-    mysql.query(`SELECT * FROM userAccount WHERE id='${id}';`, function(err, results, fields) {
+    mysql.query(`SELECT * FROM useraccount WHERE id='${id}';`, function(err, results, fields) {
         if (results.length > 0) {
             res.json({ok: false});
         }
@@ -150,7 +157,7 @@ app.post('/idcheck', (req, res) => {
 
 app.post('/nickcheck', (req, res) => {
     let nick = req.body.nick;
-    mysql.query(`SELECT * FROM userAccount WHERE nick='${nick}';`, function(err, results, fields) {
+    mysql.query(`SELECT * FROM useraccount WHERE nick='${nick}';`, function(err, results, fields) {
         if (results.length > 0) {
             res.json({ok: false});
         }
@@ -166,9 +173,9 @@ app.post('/register', (req, res) => {
     let email = req.body.email;
     let nick = req.body.nick;
     console.log("POST Register!", id, pw, email, nick);
-    mysql.query(`SELECT * FROM userAccount WHERE id='${id}' OR nick='${nick}';`, function(err, results, fields) {
+    mysql.query(`SELECT * FROM useraccount WHERE id='${id}' OR nick='${nick}';`, function(err, results, fields) {
         if (results.length === 0) {
-            results = mysql.query(`INSERT INTO userAccount(id, pw, email, nick) VALUE('${id}', '${pw}', '${email}', '${nick}');`, function(err, results, fields) {
+            results = mysql.query(`INSERT INTO useraccount(id, pw, email, nick) VALUE('${id}', '${pw}', '${email}', '${nick}');`, function(err, results, fields) {
                 if (!err) {
                     res.json({ok: true, msg: "가입에 성공했습니다."});
                 }
@@ -186,7 +193,7 @@ app.post('/register', (req, res) => {
 app.post('/login', (req, res) => {
     let id = req.body.id;
     let pw = req.body.pw;
-    mysql.query(`SELECT * FROM userAccount WHERE id='${id}' AND pw='${pw}';`, function(err, results, fields) {
+    mysql.query(`SELECT * FROM useraccount WHERE id='${id}' AND pw='${pw}';`, function(err, results, fields) {
         if (!err) {
             if (results.length === 1) {
                 req.session.login = true;
@@ -207,6 +214,9 @@ app.post('/login', (req, res) => {
 app.post('/submitPost', (req, res) => {
     let data = req.body;
     console.log(data);
+    data.images = data.images.filter(element => {
+        return element !== null;
+    });
 
     if (req.session.login) {
         mysql.query(`INSERT INTO userpost(class, title, text, open, user_no, date) VALUE('${data.class}', '${data.title}', '${data.post}', '${data.open ? 1 : 0}', '${req.session.no}', '${new Date(Date.now())}');`, function(err, results, fields) {
@@ -273,26 +283,31 @@ app.post("/loadPosts", (req, res) => {
 
                     mysql.query(`SELECT * FROM postimg WHERE post_no='${postNo}' ORDER BY rand() limit 1;`, function(err, results, fields) {
                         if (!err) {
-                            data[results[0]['post_no']].img = results[0]['url'];
-                            data[results[0]['post_no']].tags = [];
-                            console.log(results[0]['post_no']);
-                            mysql.query(`SELECT * FROM tags WHERE post_no='${results[0]['post_no']}' ORDER BY rand() limit 3;`, function(err, results, fields) {
-                                if (!err) {
-                                    if (results.length > 0) {
-                                        for(let j = 0; j < results.length; j++) {
-                                            data[results[0]['post_no']].tags.push(results[j]['tag'])
+                            if (results.length > 0) {
+                                data[results[0]['post_no']].img = results[0]['url'];
+                                data[results[0]['post_no']].tags = [];
+                                console.log(results[0]['post_no']);
+                                mysql.query(`SELECT * FROM tags WHERE post_no='${results[0]['post_no']}' ORDER BY rand() limit 3;`, function(err, results, fields) {
+                                    if (!err) {
+                                        if (results.length > 0) {
+                                            for(let j = 0; j < results.length; j++) {
+                                                data[results[0]['post_no']].tags.push(results[j]['tag'])
+                                            }
+                                        }
+                                        success += 1;
+                                        console.log(forLimit - start, success);
+                                        if (success === forLimit - start) {
+                                            res.json(data);
                                         }
                                     }
-                                    success += 1;
-                                    console.log(forLimit - start, success);
-                                    if (success === forLimit - start) {
-                                        res.json(data);
+                                    else {
+                                        console.log(err.toString());
                                     }
-                                }
-                                else {
-                                    console.log(err.toString());
-                                }
-                            });
+                                });
+                            }
+                            else {
+                                //res.json({});
+                            }
                         }
                         else {
                             console.log(err.toString());
@@ -312,7 +327,6 @@ app.post('/recommend', (req, res) => {
     if (req.session.login) {
         let type = req.body.type;
         let word = req.body.word;
-        console.log(req.body);
         let url = API_URL + '/recommend';
         let formData = FormData();
         formData.append('class', type);
@@ -321,6 +335,7 @@ app.post('/recommend', (req, res) => {
             axios.post(url, formData, {
                 ...formData.getHeaders(),
                 "Content-Length": formData.getLengthSync(),
+                "Content-type": "charset=UTF-8",
                 maxContentLength: Infinity,
                 maxBodyLength: Infinity
             }).then(data => {
@@ -337,4 +352,57 @@ app.post('/recommend', (req, res) => {
 
         }
     }    
+});
+
+app.post('/loadPost', (req, res) => {
+    if (req.session.login) {
+        let postNo = req.body.no;
+        let data = {}
+        mysql.query(`SELECT * FROM userpost WHERE no='${postNo}';`, function(err, results, fields) {
+            if (!err) {
+                if (results.length === 1) {
+                    let postNo = results[0]['no'];
+                    if (!data[postNo]) {
+                        data[postNo] = {};
+                    }
+                    data[postNo].postNo = postNo;
+                    data[postNo].date = results[0]['date'];
+                    data[postNo].title = results[0]['title'];
+                    data[postNo].text = results[0]['text'];
+                    mysql.query(`SELECT * FROM useraccount WHERE no='${results[0]['user_no']}';`, function(err, results, fields) {
+                        if (!err) {
+                            data[postNo].name = results[0]['nick']
+                            data[postNo].tag = "뉴페이스"
+                            mysql.query(`SELECT * FROM postimg WHERE post_no='${postNo}';`, function(err, results, fields) {
+                                if (!err) {
+                                    data[postNo].imgs = [];
+                                    data[postNo].tags = [];
+                                    for(let i = 0; i < results.length; i++) {
+                                        data[postNo].imgs.push(results[i]['url']);
+                                    }
+                                    mysql.query(`SELECT * FROM tags WHERE post_no='${postNo}';`, function(err, results, fields) {
+                                        if (!err) {
+                                            for(let i = 0; i < results.length; i++) {
+                                                data[postNo].tags.push(results[i]['tag'])
+                                            }
+                                            res.json({ok: true, data: data});
+                                        }
+                                        else {
+                                            console.log(err.toString());
+                                        }
+                                    });
+                                }
+                                else {
+                                    console.log(err.toString());
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+            else {
+                console.log(err.toString());
+            }
+        });
+    }
 });

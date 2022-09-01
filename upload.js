@@ -25,7 +25,7 @@ const fileFilter = (req, file, cb) => {
       filename: (req, file, done) => {
         const ext = path.extname(file.originalname);
         // aaa.txt => aaa+&&+129371271654.txt
-        const fileName = path.basename(file.originalname, ext) + Date.now() + ext;
+        const fileName = path.basename("content_file_", ext) + Date.now() + ext;
         done(null, fileName);
       },
     }),

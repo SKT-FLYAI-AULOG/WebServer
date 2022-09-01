@@ -4,9 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/custom.css" rel="stylesheet">
-        <style type="text/css">
-          @import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
-        </style>
+        <link href="http://fonts.googleapis.com/earlyaccess/nanumgothic.css" rel="stylecheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
         <script src="https://use.fontawesome.com/releases/v6.1.2/js/all.js"></script>
@@ -67,7 +65,7 @@
             <p class="h3">사진 올리기</p>
             <hr>
             <div class="input-group">
-              <input type="file" name="uploadfile" id="uploadImgInput" multiple style="display:none;" accept=".gif, .jpg" onchange="uploadFileAdded()"/>
+              <input type="file" name="uploadfile" id="uploadImgInput" multiple style="display:none;" onchange="uploadFileAdded()"/>
               <label class="btn btn-primary" for="uploadImgInput">이미지 선택</label>
             </div>
             <br>
@@ -77,6 +75,17 @@
             <div id="div-upload-image"></div>
             <button id="btn-img-upload" type="button" class="btn btn-primary" onclick="startUpload();">업로드</button>
             <br>
+            <br>
+
+            <p class="h3">태그</p>
+            <hr>
+            <div id="div-tag-btns">
+            </div>
+            <br>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="inputGroup-sizing-default">태그 추가</span>
+              <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            </div>
             <br>
             <p class="h3">본문 작성</p>
             <hr>
@@ -119,14 +128,34 @@
                     <div style="margin-bottom: 10px;">
                       <h5>문장 추천</h5>
                       <hr>
-                      <input id="inp-recommand-word" class="form-control" type="text" placeholder="추천받을 단어 입력" aria-label="" onchange="loadSentence();">
-                      <br>
+                      <div class="bs-callout bs-callout-primary">
+                        사진과 <code><b>관련성이 높은 분류</b></code>가 자동으로 선택됩니다.
+                      </div>
+                      <div class="input-group mb-3">
+                        <!-- <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button> -->
+                        <span>
+                          <select class="form-select w-100" id="postSelectClass" aria-label="">
+                            <option value="0" selected>낚시</option>
+                            <option value="1">레저</option>
+                            <option value="2">캠핑</option>
+                            <option value="3">워터파크</option>
+                            <option value="4">역사유적지</option>
+                            <option value="5">공부</option>
+                            <option value="6">전시회</option>
+                            <option value="7">아이</option>
+                            <option value="8">카페</option>
+                            <option value="9">음식</option>
+                          </select>
+                        </span>
+                        
+                        <input id="inp-recommand-word" class="form-control" type="text" placeholder="추천받을 단어 입력" aria-label="" onchange="loadSentence();">
+                      </div>
                       <div id="div-recommand-sentences" class="list-group">
                       </div>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary">다시생성</button>
-                      <button type="button" class="btn btn-primary">추가</button>
+                      <button type="button" class="btn btn-secondary" onclick="loadSentence();">다시생성</button>
+                      <button type="button" class="btn btn-primary" onclick="addSelectedSentence();">추가</button>
                     </div>
                     <h5>내용 편집</h5>
                     <hr>

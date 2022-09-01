@@ -34,7 +34,6 @@ function clearImageDiv() {
 function deleteImage() {
     let i = document.querySelector('#p-delete-dialog').value;
     fileLists.splice(i, 1);
-    console.log(i, fileLists)
     refreshUploadFiles();
 }
 
@@ -43,7 +42,7 @@ function createImageDiv(file, i) {
     let imgDiv = document.createElement('div');
     imgDiv.style.border = '1px solid'
     imgDiv.style.margin = '5px';
-    imgDiv.style.marginBottom = '30px';
+    imgDiv.style.marginBottom = '20px';
     let imgList = document.querySelector("#div-upload-image");
     imgDiv.style.width = "100px";
     imgDiv.style.height = "100px";
@@ -67,9 +66,11 @@ function startUpload() {
     let btn = document.querySelector('#btn-img-upload');
     btn.disabled = true;
     btn.innerHTML = '';
-    btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-    업로드 진행중...`;
+    btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>업로드 진행중...`;
     // 비동기 파일 업로드를 시작한다.
+    fileLists = fileLists.filter(element => {
+        return element !== null;
+    });
     let formData = new FormData();
     for (let i = 0; i < fileLists.length; i++) {
         formData.append('files', fileLists[i]);
@@ -78,7 +79,6 @@ function startUpload() {
     }
     let classIdx = document.querySelector("#btnradio1").checked ? 0 : 1;
     let url = classIdx == 0 ? "/upload/class" : "/upload/detect";
-    console.log(url);
     $.ajax({
         url: url,
         type: "post",
@@ -86,17 +86,34 @@ function startUpload() {
         cache: false,
         processData: false,
         contentType: false,
+        enctype: `multipart/form-data; boundary=${formData._boundary}`, 
         success: (data) => {
             if (data.ok) {
-                let imgList = document.querySelector("#div-upload-image").children;
-                for(let i = 0; i < data.data.length; i++) {
-                    imgList[i].innerHTML += `<p style="position: absolute; margin-top: 5px;">#${data.data[i].tag}</p>`;
-                    fileInfos[i].filename = data.data[i].filename;
-                    fileInfos[i].tag = data.data[i].tag;
-                    if (fileInfos[i].info)
-                        document.querySelector("#postTextAreaReadOnly").value += `${fileInfos[i].info.originalDate.getHours()}시 ${fileInfos[i].info.originalDate.getMinutes()}분에 ${data.data[i].tag}
-`; 
-                };
+                for(let i = 0; i < data.data.filenames.length; i++) {
+                    fileInfos[i].filename = data.data.filenames[i];
+                }
+                for(let i = 0; i < data.data.tags.length; i++) {
+                    addTag(data.data.tags[i]);
+                }
+                let options = document.querySelector("#postSelectClass").children;
+                let cn = options[0];
+                for(let i = 0; i < options.length; i++) {
+                    if (!options[i])
+                        continue;
+                    options[i].selected = false;
+                    if (options[i].text === data.data.cn)
+                        cn = options[i];
+                }
+                cn.selected = true;
+                let postTextAreaReadOnly = document.querySelector("#postTextAreaReadOnly")
+                let postTextArea = document.querySelector("#postTextArea")
+
+                for(let i = 0; i < data.data.sentences.length; i++) {
+                    postTextAreaReadOnly.value += data.data.sentences[i];
+                    postTextArea.value += data.data.sentences[i];
+                }
+                
+
                 document.querySelector("#postTextArea").value = document.querySelector("#postTextAreaReadOnly").value;
                 document.querySelector('#p-upload-dialog').innerHTML = '업로드에 성공했습니다.';
                 $('#successUploadDialog').modal('show');
@@ -166,7 +183,8 @@ function Uploader(file) {
             // AJAX 요청을 생성해 전송한다.
             xhr.open("POST", "upload", true);
             // 파일 이름은 file-name에 명시한다.
-            xhr.setRequestHeader("file-name", encodeURIComponent(fileName));
+            xhr.setRequestHeader("file-name", escape(encodeURIComponent(fileName)));
+            xhr.setRequestHeader('Content-Type','text/html;charset=utf-8');
             xhr.send(evt.target.result);
         };
 
@@ -257,10 +275,9 @@ function editPost() {
 function submitPost() {
     let classIdx = document.querySelector("#btnradio1").checked ? 0 : 1;
     let images = [];
-    let tags = [];
+    let tags = addedTags;
     for(let i = 0; i < fileInfos.length; i++) {
         images.push(fileInfos[i].filename);
-        tags.push(fileInfos[i].tag);
     }
     let title = document.querySelector("#post-title").value;
     let post = document.querySelector("#postTextAreaReadOnly").value;
@@ -317,8 +334,15 @@ function submitPost() {
 }
 
 function loadSentence() {
-    let type = 'fish';
+    let e = document.getElementById("postSelectClass");
+    let type = e.options[e.selectedIndex].text;
     let word = document.querySelector("#inp-recommand-word").value;
+    let div = document.querySelector('#div-recommand-sentences');
+    div.innerHTML = `<div class="d-flex justify-content-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>`;
     $.ajax({
         url: "/recommend",
         type: "post",
@@ -333,11 +357,11 @@ function loadSentence() {
         contentType: "application/json; charset=utf-8",
         success: (data) => {
             if (data.ok) {
+                console.log(data);
                 let div = document.querySelector("#div-recommand-sentences");
                 div.innerHTML = "";
-                console.log()
                 for(let i = 0; i < data.sentences.length; i++) {
-                    div.innerHTML += `<button type="button" class="list-group-item list-group-item-action" onclick="addRecommandSentence(this);">${data.sentences[i]}</button>`
+                    div.innerHTML += `<button type="button" class="list-group-item list-group-item-action" onclick="selRecommandSentence(this);">${data.sentences[i]}</button>`
                 }
             }
             else {
@@ -350,6 +374,44 @@ function loadSentence() {
     });
 }
 
-function addRecommandSentence(element) {
+function selRecommandSentence(element) {
+  let buttons = document.querySelector("#div-recommand-sentences").children;
+  for(let i = 0; i < buttons.length; i++) {
+    buttons[i].classList.remove('active');
+  }
+  element.classList.add('active');
+}
 
+let addedTags = [];
+
+function addTag(tag) {
+    let tagDiv = document.querySelector("#div-tag-btns");
+    if (document.querySelector(`#${tag}`))
+        return;
+    let html = `<label id="${tag}" class="border border-secondary rounded-pill bg-light" style="padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; margin-right: 5px; margin-left: 5px;">#${tag} <button type="button" class="btn-close" aria-label="Close" style="width: 8px; height: 8px; padding-top: 7px;" onclick="deleteTag('${tag}');"></button></label>`;
+    tagDiv.innerHTML += html;
+    addedTags.push(tag);
+}
+
+function deleteTag(tag) {
+    $(`#${tag}`).remove();
+    let idx = addedTags.indexOf(tag);
+    addedTags.splice(idx, 1);
+}
+
+function refreshAllTags() {
+    let tagDiv = document.querySelector("#div-tag-btns");
+    tagDiv.innerHTML = "";
+    addedTags = [];
+}
+
+function addSelectedSentence() {
+    let sentences = document.querySelector("#div-recommand-sentences").children;
+    let textarea = document.querySelector("#postTextArea");
+    for(let i = 0; i < sentences.length; i++) {
+        if (sentences[i].classList.contains('active')) {
+            textarea.value += sentences[i].innerHTML;
+            break;
+        }
+    }
 }
