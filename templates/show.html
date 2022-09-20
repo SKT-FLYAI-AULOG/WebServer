@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div class="print">{{value['kind']}}</div>
+<div class="print">{{value['detail']}}</div>
+<img src={{value['file']}}/>
+<form action="/home" method="POST">
+  <input type='hidden' name="file" value={{value['file']}} >
+  <input type="submit" value="초기화"></input>
+</form> 
+
+</body>
+</html>
