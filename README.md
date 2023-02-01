@@ -32,3 +32,5 @@
      - Custom Vision
      - Virtual Machine
      
+# 6. 시연 영상
+![ezgif com-gif-maker (2)](https://user-images.githubusercontent.com/76957700/215956693-7c780c9a-2ec7-453a-a94f-3f7dbec95484.gif)
