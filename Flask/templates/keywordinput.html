@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>키워드 입력</h2>
+<div class="print">{{value['kind']}}</div>
+<img src={{value['file']}}/>
+<form action="/gogo" method="POST">
+  <label for="inputtext">내 키워드: </label><br>
+  <input type="text" id="inputtext" name="inputtext" value=""><br><br>
+  <input type='hidden' name='kind' value={{value['kind']}} >
+  <input type='hidden' name="file" value={{value['file']}} >
+  <input type="submit" value="확인"></input>
+</form> 
+
+</body>
+</html>
